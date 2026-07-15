@@ -1,12 +1,10 @@
 package com.mukul.demo;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 
 @SpringBootApplication
@@ -14,21 +12,26 @@ import java.util.Map;
 @RequestMapping("/payments")
 public class DemoApplication {
 
-    @Autowired
-    private MongoTemplate mongoTemplate;
-
     public static void main(String[] args) {
         SpringApplication.run(DemoApplication.class, args);
     }
 
-    @PostMapping("/log")
-    public Map<String, Object> logPayment(@RequestBody Map<String, Object> payment) {
-        mongoTemplate.save(payment, "payments");
-        return payment;
+    @GetMapping("/")
+    public String home() {
+        return "Payment Service is Running Successfully!";
     }
 
-    @GetMapping("/logs")
-    public List<Map> getLogs() {
-        return mongoTemplate.findAll(Map.class, "payments");
+    @GetMapping("/status")
+    public Map<String, String> status() {
+        Map<String, String> response = new HashMap<>();
+        response.put("status", "SUCCESS");
+        response.put("message", "Payment Service is Live!");
+        return response;
+    }
+
+    @PostMapping("/log")
+    public Map<String, Object> logPayment(@RequestBody Map<String, Object> payment) {
+        payment.put("message", "Payment Logged Successfully");
+        return payment;
     }
 }
